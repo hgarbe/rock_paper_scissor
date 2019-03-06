@@ -1,94 +1,113 @@
-var playerScore = 0;
-var compuerScore = 0;
-var playerScore_span = document.getElementsById("player-score");
-var computerScore_span = document.getElementsById("computer-score");
-const scoreBoard_div = document.querySelector(".scoreboard");
-const result_p = document.querySelector(".result > p");
-const rock_div = document.getElementById{"rock"};
-const paper_div = document.getElementById{"paper"};
-const scissor_div = document.getElementById{"scissor"};
+let playerScore = 0;
+let computerScore = 0;
+const userScore_span = document.getElementById('player-score');
+const computerScore_span = document.getElementById('computer-score');
+const scoreBoard_div = document.querySelector('.scoreboard');
+const result_div = document.querySelector('.result');
+const rock_div = document.getElementById('rock');
+const paper_div = document.getElementById('paper');
+const scissors_div = document.getElementById('scissors');
 
+
+// set up the core function for the computer that will use math.random to loop through an array and return that value
 function getComputerChoice() {
-  const choices = ["rock", "paper", "scissor"];
+  const choices = ['rock', 'paper', 'scissors'];
   const randomNumber = Math.floor(Math.random() * 3);
   return choices[randomNumber];
 }
 
-function convertToWord(letter) {
-  if (letter === "rock") return "Rock";
-  if (letter === "paper") return "Paper";
-  return "Scissors";
+// similar to convertcase but just takes lowercase and replaces with titlecase
+function convertCase(anythingIwant) {
+  if (anythingIwant === 'paper') return 'Paper';
+  if (anythingIwant === 'scissors') return 'Scissors';
+  return 'Rock';
 }
 
-function win(playerChoice, computerChoice) {
-  const smallPlayerWord = "player".fontsize(3).sub();
-  const smallCompueterWord = "computer".fontsize(3).sub();
-  const playerChoice_div = document.getElementById(playerChoice);
+// Winning Condition - this handles what happens when the user clicks one of the choices where the value is them passed through as a parameter
+function win(player, computer) {
   playerScore++;
+  // console.log('user score is ' + userScore + ' ' + user);
   playerScore_span.innerHTML = playerScore;
-  compuerScore_span.innerHTML = computerScore;
-  result_div.innerHTML = (convertToWord)playerChoice + "beats" + (convertToWord)computerChoice + "You Win!!";
-  playerChoice_div.classList.add("green-glow");
-  setTimeout(function() {document.getElementById(playerChoice).classList.remove("green-glow") }, 300);
+  const playerName = ("player").fontsize(3).sup();
+  const computerName = ("computer").fontsize(3).sup();
+  result_div.innerHTML = `<p>${convertCase(player)}${playerName} beats ${convertCase(computer)}${computerName}. You win!</p>`;
+  const roundStatus = document.getElementById(player);
+  roundStatus.classList.add('winningStyles');
+  setTimeout(() => roundStatus.classList.remove('winningStyles'), 300);
 }
 
-function lose(playerChoice, computerChoice) {
-  const smallPlayerWord = "player".fontsize(3).sub();
-  const smallCompueterWord = "computer".fontsize(3).sub();
-  const playerChoice_div = document.getElementById(playerChoice);
+// Losing Condition - this handles what happens when the user clicks one of the choices where the value is them passed through as a parameter
+function loses(player, computer) {
   computerScore++;
-  playerScore_span.innerHTML = playerScore;
-  compuerScore_span.innerHTML = computerScore;
-  result_div.innerHTML = (convertToWord)playerChoice + "loses" + (convertToWord)computerChoice + "You Lose";
-  playerChoice_div.classList.add("red-glow");
-  setTimeout(function() {document.getElementById(playerChoice).classList.remove("red-glow") }, 300);
+  // console.log('computer score is ' + computerScore + ' ' + computer);
+  computerScore_span.innerHTML = computerScore;
+  const playerName = ("player").fontsize(3).sup();
+  const computerName = ("computer").fontsize(3).sup();
+  result_div.innerHTML = `<p>${convertCase(computer)}${computerName} beats ${convertCase(player)}${playerName}. You lose!</p>`;
+  const roundStatus = document.getElementById(player);
+  roundStatus.classList.add('losingStyles');
+  setTimeout(() => roundStatus.classList.remove('losingStyles'), 300);
 }
 
-function draw(playerChoice, computerChoice)) {
-  const smallPlayerWord = "player".fontsize(3).sub();
-  const smallCompueterWord = "computer".fontsize(3).sub();
-  const playerChoice_div = document.getElementById(playerChoice);
-  result_div.innerHTML = (convertToWord)playerChoice + "equals" + (convertToWord)computerChoice + "It is a Draw";
-  playerChoice_div.classList.add("blue-glow");
-  setTimeout(function() {document.getElementById(playerChoice).classList.remove("blue-glow") }, 300);
+// Draw Condition - this handles what happens when the user clicks one of the choices where the value is them passed through as a parameter
+function draw(player, computer) {
+	const playerName = ("player").fontsize(3).sup();
+  const computerName = ("computer").fontsize(3).sup();
+  result_div.innerHTML = `<p>It was a draw! You both chose ${convertCase(player)}</p>`;
+  // "It was a draw! You both chose " + user + " " + computer; // old js
+  const roundStatus = document.getElementById(player);
+  roundStatus.classList.add('drawStyles');
+  setTimeout(() => roundStatus.classList.remove('drawStyles'), 300);
 }
 
+// The core game functions that set up and determine the games actual logic aka paper beats rock etc
 function game(playerChoice) {
   const computerChoice = getComputerChoice();
-  switch (playerChoice + computerChoice) {
-    case "rockscissor"
-    case "paperrock"
-    case "scissorpaper"
-     win(playerChoice, computerChoice):
-     break;
-    case "rockpaper"
-    case "paperscissor"
-    case "scissorrock" 
-      lose(playerChoice, computerChoice);
+  // console.log('Game function: user choice is = ' + userChoice);
+  // console.log('Game function: computer choice is = ' + computerChoice);
+
+  switch (playerrChoice + computerChoice) {
+    case 'paperrock':
+    case 'rockscissors':
+    case 'scissorspaper':
+      win(playerChoice, computerChoice);
+      // console.log("user wins");
       break;
-    case "rockrock"
-    case "paperpaper"
-    case "scissorscissor" 
-      draw(playerChoice, computerChoice)
-      break;  
+    case 'rockpaper':
+    case 'scissorsrock':
+    case 'paperscissors':
+      loses(playerChoice, computerChoice);
+      // console.log("computer wins");
+      break;
+    case 'rockrock':
+    case 'scissorsscissors':
+    case 'paperpaper':
+      draw(playerChoice, computerChoice);
+      // console.log("draw");
+      break;
   }
 }
+// ES5 style of writing this function
+// function main() {
+//   rock_div.addEventListener('click', function() {
+//     game('rock');
+//   });
 
+//   paper_div.addEventListener('click', function() {
+//     game('paper');
+//   });
+
+//   scissors_div.addEventListener('click', function() {
+//     game('scissors');
+//   });
+// }
+
+// ES6 style of writing this function
+// This function creates and adds an eventlistener to the rock, paper scissors html element and the passes the value of that element to the game function
 function main() {
-  rock_div.addEventListener("click", function() {
-    console.log("You choose Rock");
-    game("rock");
-  })
-
-  paper_div.addEventListener("click", function() {
-    console.log("You choose Paper");
-    game("paper");
-  })
-
-  scissors_div.addEventListener("click", function() {
-    console.log("You choose Scissors");
-    game("scissor");
-  })
+  rock_div.addEventListener('click', () => game('rock'));
+  paper_div.addEventListener('click', () => game('paper'));
+  scissors_div.addEventListener('click', () => game('scissors'));
 }
 
 main();
